@@ -1,0 +1,30 @@
+# NickBook main config. Chat settings: chat.yml | Tab settings: tab.yml
+# Player data is stored in players.yml (migrated automatically from older versions).
+
+# Names used by /nick name random. Add as many as you like.
+random-names:
+  - NebulaFox
+  - PixelPilot
+  - CopperCreeper
+  - LunarByte
+  - MossyMiner
+  - QuartzKnight
+  - EmberEcho
+  - CloudCrafter
+
+# Rank labels shown in the book and as {prefix} while nicked.
+ranks:
+  DEFAULT: "&7"
+  VIP: "&a[VIP] "
+  VIP+: "&a[VIP&6+&a] "
+  MVP: "&b[MVP] "
+  MVP+: "&b[MVP&c+&b] "
+  MVP++: "&6[MVP&c++&6] "
+
+# Action bar shown while nicked. Empty "" disables it. Supports & colors and placeholders.
+nicked-actionbar: "&fYou are currently &cNICKED"
+
+# Used by {server}, {time} and {date}.
+server-name: "MyServer"
+time-format: "HH:mm"
+date-format: "dd/MM/yyyy"

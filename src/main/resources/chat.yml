@@ -1,0 +1,175 @@
+# ============================================================
+#  NickBook - Chat module
+# ============================================================
+# Colors:  &a &l ...  |  hex (1.16+): &#FF5555 or {#FF5555}
+#          <gradient:#FF5555:#FFAA00>text</gradient>   <rainbow>text</rainbow>
+#          (on 1.8-1.15 hex/gradients fall back to the nearest normal color)
+# Placeholders: every PlaceholderAPI %placeholder% + built-ins:
+#   {player} real name     {name} shown name (nick aware)   {displayname}
+#   {prefix} {suffix}      (nick rank while nicked, LuckPerms prefix/suffix otherwise)
+#   {group} {world} {online} {max} {ping} {health} {maxhealth} {food} {level}
+#   {gamemode} {x} {y} {z} {time} {date} {tps} {server} {nicked}
+#   {channel} (range chat tag)  {animation:<name>} (animations from tab.yml)
+# Player messages are NEVER parsed for placeholders (no %player_ip% tricks).
+# ============================================================
+
+enabled: true
+
+# If LPC is installed, let LPC build the format (moderation, mentions, ignore etc. still work here).
+defer-to-lpc: true
+
+# Where a player's group comes from:
+#   luckperms  = LuckPerms primary group (falls back to permission)
+#   permission = highest "priority" group the player has nickbook.group.<group> for
+group-source: luckperms
+
+# Group used while nicked, so staff formats never leak a nicked player's real rank.
+# Leave "" to use the group with the same name as the nick rank (vip, mvp+...) if it exists.
+nicked-group: default
+
+# One section per group. Group names should match LuckPerms groups (case insensitive).
+formats:
+  default:
+    priority: 0
+    format: "{channel}{prefix}{name}{suffix}&7: {message}"
+    message-color: "&7"
+  vip:
+    priority: 10
+    format: "{channel}{prefix}{name}{suffix}&f: {message}"
+    message-color: "&f"
+  mvp:
+    priority: 20
+    format: "{channel}{prefix}{name}{suffix}&f: {message}"
+    message-color: "&f"
+
+# Hover tooltip + click action on the player name (sent as JSON chat).
+# Note: when enabled NickBook delivers chat itself, which can conflict with other chat plugins.
+hover:
+  enabled: false
+  lines:
+    - "&e{displayname}"
+    - "&7Group: &f{group}"
+    - "&7World: &f{world}"
+    - "&7Ping: &f{ping}ms"
+    - ""
+    - "&aClick to message"
+  # suggest:<text> | run:<command> | url:<link> | copy:<text> (1.15+) | none
+  click: "suggest:/msg {name} "
+
+# Mentioning a player (by their shown/nick name) highlights it and pings them.
+mentions:
+  enabled: true
+  require-at: false          # true = only "@name" pings
+  format: "{name}"
+  sound: "ORB_PICKUP,ENTITY_EXPERIENCE_ORB_PICKUP"   # first valid name is used (1.8 + 1.9+)
+  volume: 1.0
+  pitch: 1.2
+  actionbar: "{sender} mentioned you!"
+
+cooldown:
+  enabled: true
+  seconds: 2
+
+anti-repeat:
+  enabled: true
+  similarity: 85             # % similar to the last message to be blocked
+
+anti-caps:
+  enabled: true
+  min-length: 6
+  max-percent: 60
+  action: lowercase          # lowercase | block
+
+filter:
+  enabled: true
+  whole-words: true
+  block: false               # true = cancel message, false = replace with stars
+  replacement: "*"
+  words:
+    - badword
+    - anotherbadword
+
+anti-advertising:
+  enabled: true
+  whitelist:
+    - myserver.net
+    - discord.gg/myserver
+
+# Local chat: only players within the radius see you. Start with the global prefix to talk globally.
+range-chat:
+  enabled: false
+  radius: 100
+  global-prefix: "!"
+  local-tag: "&e[L] "
+  global-tag: "&6[G] "
+
+# Only players in the same world see chat (ignored when range-chat is enabled).
+per-world-chat: false
+
+join-quit:
+  enabled: false
+  join: "&8[&a+&8] {displayname}"
+  first-join: "&d&lWelcome &f{name} &dto the server! &7(#{online})"
+  quit: "&8[&c-&8] {displayname}"
+  join-sound: ""
+  motd: []
+
+private-messages:
+  enabled: true
+  console-name: "&cConsole"
+  format-sent: "&d[&fme &d-> {receiver_displayname}&d] &f{message}"
+  format-received: "&d[{sender_displayname} &d-> &fme&d] &f{message}"
+  format-spy: "&8[&7Spy&8] &7{sender_name} &8-> &7{receiver_name}&8: &7{message}"
+  sound: "ORB_PICKUP,ENTITY_EXPERIENCE_ORB_PICKUP"
+  log-to-console: true
+
+clear-chat:
+  lines: 100
+
+broadcast:
+  format: "&8[&c&lBROADCAST&8] &f{message}"
+  sound: ""
+
+auto-broadcast:
+  enabled: false
+  interval: 300              # seconds
+  random: false
+  sound: ""
+  disabled-worlds: []
+  messages:
+    - "&6&lTIP &7Use &e/nick &7to hide your identity!"
+    - - "&8&m------------------------"
+      - "&bJoin our Discord: &fdiscord.gg/myserver"
+      - "&8&m------------------------"
+    - "&aThere are &f{online} &aplayers online right now."
+
+messages:
+  prefix: "&8[&6Chat&8] "
+  no-permission: "{prefix}&cYou don't have permission."
+  players-only: "{prefix}&cOnly players can do that."
+  usage: "{prefix}&cUsage: &f{usage}"
+  player-not-found: "{prefix}&cPlayer &f{player} &cis not online."
+  reloaded: "&aNickBook reloaded (config.yml, chat.yml, tab.yml)."
+  chat-muted: "{prefix}&cChat is currently muted."
+  chat-muted-on: "{prefix}&cChat has been muted by &f{player}&c."
+  chat-muted-off: "{prefix}&aChat has been unmuted by &f{player}&a."
+  chat-cleared: "{prefix}&7Chat was cleared by &f{player}&7."
+  cooldown: "{prefix}&cPlease wait &f{seconds}s &cbefore chatting again."
+  repeat: "{prefix}&cPlease don't repeat yourself."
+  caps: "{prefix}&cPlease don't use so many capital letters."
+  filtered: "{prefix}&cWatch your language!"
+  advertising: "{prefix}&cAdvertising is not allowed."
+  advertising-alert: "&8[&cAlert&8] &f{player} &7tried to advertise: &f{message}"
+  pm-disabled: "{prefix}&cPrivate messages are disabled."
+  pm-self: "{prefix}&cYou can't message yourself."
+  pm-target-disabled: "{prefix}&f{player} &cis not accepting messages."
+  no-reply: "{prefix}&cYou have nobody to reply to."
+  socialspy-on: "{prefix}&aSocial spy enabled."
+  socialspy-off: "{prefix}&cSocial spy disabled."
+  msgtoggle-on: "{prefix}&aYou are now accepting private messages."
+  msgtoggle-off: "{prefix}&cYou are no longer accepting private messages."
+  ignore-on: "{prefix}&7You are now ignoring &f{player}&7."
+  ignore-off: "{prefix}&7You are no longer ignoring &f{player}&7."
+  ignore-self: "{prefix}&cYou can't ignore yourself."
+  ignore-exempt: "{prefix}&cYou can't ignore &f{player}&c."
+  ignore-list: "{prefix}&7Ignored: &f{list}"

@@ -1,0 +1,96 @@
+# ============================================================
+#  NickBook - Tab module (header/footer, tab names, nametags, sorting)
+#  MineStorm.iR | BedFight Configuration (Aqua Theme)
+# ============================================================
+# Same colors and placeholders as chat.yml ({name}, {prefix}, %papi%, {animation:x}, ...).
+# Everything is nick aware: nicked players show their nick name + nick rank.
+# ============================================================
+
+enabled: true
+
+# If the TAB plugin (NEZNAMY) is installed, turn this module off and let TAB do it
+# (use %nickbook_prefix% / %nickbook_name% / %nickbook_suffix% in TAB's groups.yml).
+disable-if-tab-plugin-installed: false
+
+# Ticks between updates (20 = 1 second). Only changed values are sent to players.
+update-interval: 10
+
+group-source: luckperms
+nicked-group: default
+
+# Worlds where NickBook doesn't touch the tab list.
+disabled-worlds: []
+
+header-footer:
+  enabled: true
+  header:
+    - ""
+    - "&3&m------------------------"
+    - "&bMineStorm &fNetwork"
+    - "&7BedFight &8• &fBeta Season"
+    - "&3&m------------------------"
+    - "&7Welcome back, &b{name}&7!"
+    - ""
+  footer:
+    - ""
+    - "&3&m------------------------"
+    - "&bOnline &8» &f{online} &8¦ &bPing &8» &f{ping}ms"
+    - "&bPlay.MineStorm.iR"
+    - "&3&m------------------------"
+    - ""
+
+# Override header/footer per world (optional).
+per-world:
+  world_nether:
+    header:
+      - ""
+      - "&c&lTHE NETHER"
+      - ""
+
+tabname:
+  enabled: true
+  default-format: "{prefix}{name}{suffix}"
+  max-length: 0
+
+# Nametag above the head (prefix/suffix). Max 16 chars each on 1.8-1.12.
+nametags:
+  # NickBook does not create fake nametags. LuckPerms/TAB owns rank nametags.
+  # Nick ranks remain available in chat and tab placeholders while nicked.
+  enabled: false
+  visibility: always         # always | never | hide-for-other-teams | hide-for-own-team
+
+# Tab list order: alphabetical only. LuckPerms owns all rank display.
+sorting:
+  enabled: true
+  alphabetical: true
+
+# Yellow number next to names in tab. type: ping | health | level | placeholder
+tab-objective:
+  enabled: true
+  type: ping
+  value: "%player_ping%"
+  title: "&bPing"
+
+# Number under the nametag.
+belowname:
+  enabled: false
+  type: health
+  value: ""
+  title: "&c\u2764"
+
+# Animations, use anywhere as {animation:<name>} (also %nickbook_animation_<name>%).
+# interval is in milliseconds.
+animations:
+  title:
+    interval: 300
+    frames:
+      - "&6&lMY SERVER"
+      - "&e&lMY SERVER"
+      - "&f&lMY SERVER"
+      - "&e&lMY SERVER"
+  dots:
+    interval: 500
+    frames:
+      - "&7."
+      - "&7.."
+      - "&7..."

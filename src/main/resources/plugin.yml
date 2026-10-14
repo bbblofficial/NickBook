@@ -1,0 +1,90 @@
+name: NickBook
+version: 1.2.0
+main: com.mikaeel.nickbook.NickBookPlugin
+author: Mikaeel
+description: Nicknames, chat formatting and tab list in one plugin.
+softdepend: [PlaceholderAPI, LuckPerms, TAB, LPC]
+commands:
+  nick:
+    description: Open nickname setup or reset your nickname
+    usage: /nick [reset]
+    aliases: [nickname]
+  nickbook:
+    description: NickBook admin
+    usage: /nickbook reload
+    aliases: [nb]
+  msg:
+    description: Send a private message
+    usage: /msg <player> <message>
+    aliases: [tell, w, whisper, m, pm]
+  reply:
+    description: Reply to your last private message
+    usage: /reply <message>
+    aliases: [r]
+  socialspy:
+    description: See other players' private messages
+    aliases: [spy]
+  msgtoggle:
+    description: Toggle receiving private messages
+    aliases: [togglepm, pmtoggle]
+  clearchat:
+    description: Clear the chat
+    aliases: [cc, chatclear]
+  mutechat:
+    description: Mute or unmute global chat
+    aliases: [mc, lockchat]
+  broadcast:
+    description: Broadcast a message
+    usage: /broadcast <message>
+    aliases: [bc, bcast]
+permissions:
+  nickbook.use:
+    default: true
+  nickbook.msg:
+    default: true
+  nickbook.msgtoggle:
+    default: true
+  nickbook.chat.mention:
+    default: true
+  nickbook.chat.global:
+    default: true
+  nickbook.chat.color:
+    default: op
+  nickbook.chat.format:
+    default: op
+  nickbook.chat.magic:
+    default: op
+  nickbook.chat.hex:
+    default: op
+  nickbook.chat.spy:
+    default: false
+  nickbook.chat.notify:
+    default: op
+  nickbook.socialspy:
+    default: op
+  nickbook.clearchat:
+    default: op
+  nickbook.clearchat.bypass:
+    default: op
+  nickbook.mutechat:
+    default: op
+  nickbook.mutechat.bypass:
+    default: op
+  nickbook.broadcast:
+    default: op
+  nickbook.seenicks:
+    default: op
+  nickbook.msg.bypass:
+    default: op
+  nickbook.silentjoin:
+    default: false
+  nickbook.admin:
+    default: op
+  nickbook.chat.bypass.*:
+    default: op
+    children:
+      nickbook.chat.bypass.cooldown: true
+      nickbook.chat.bypass.repeat: true
+      nickbook.chat.bypass.caps: true
+      nickbook.chat.bypass.filter: true
+      nickbook.chat.bypass.advertising: true
