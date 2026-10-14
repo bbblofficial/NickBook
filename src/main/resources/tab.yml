@@ -61,7 +61,7 @@ nametags:
 
 # Tab list order: alphabetical only. LuckPerms owns all rank display.
 sorting:
-  enabled: true
+  enabled: false
   alphabetical: true
 
 # Yellow number next to names in tab. type: ping | health | level | placeholder

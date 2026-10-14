@@ -175,7 +175,14 @@ public final class TabManager implements Listener {
     private void nametag(Player p, ConfigurationSection g) {
         boolean tags = cfg.getBoolean("nametags.enabled", true);
         boolean sorting = cfg.getBoolean("sorting.enabled", true);
-        if (!tags && !sorting) return;
+        boolean nicked = plugin.getNickService().isNicked(p);
+        // When NickBook nametags/sorting are off, leave the normal player's
+        // scoreboard team completely alone so LuckPerms can render the rank.
+        if (!tags && !sorting && !nicked) {
+            p.setCustomName(null);
+            p.setCustomNameVisible(false);
+            return;
+        }
         String teamName = teamName(p, g);
         String old = teams.put(p.getUniqueId(), teamName);
         String prefix = tags ? render(p, g != null ? g.getString("tagprefix", "{prefix}") : "{prefix}") : "";
@@ -192,12 +199,12 @@ public final class TabManager implements Listener {
             applyColor(team, prefix);
             // Hide the real username for nicked players without rendering a
             // fake nametag. LuckPerms still owns the visible rank formatting.
-            if (tags || plugin.getNickService().isNicked(p)) {
-                visibility(team, plugin.getNickService().isNicked(p));
+            if (tags || nicked) {
+                visibility(team, nicked);
             }
             // Keep LuckPerms' rank nametag untouched, but replace the real
             // username with the nickname above the head.
-            if (plugin.getNickService().isNicked(p)) {
+            if (nicked) {
                 p.setCustomName(plugin.getNickService().shownName(p));
                 p.setCustomNameVisible(true);
             } else {
