@@ -10,9 +10,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -45,7 +42,6 @@ public final class TabManager implements Listener {
     private BukkitTask task;
     private boolean active;
     private final Map<UUID, String> teams = new HashMap<UUID, String>();
-    private final Map<UUID, ArmorStand> nickTags = new HashMap<UUID, ArmorStand>();
     private final Map<UUID, Integer> ids = new HashMap<UUID, Integer>();
     private final Map<UUID, String> lastHeaderFooter = new HashMap<UUID, String>();
     private int nextId;
@@ -185,7 +181,6 @@ public final class TabManager implements Listener {
         if (!tags && !sorting && !nicked) {
             return;
         }
-        updateNickTag(p, nicked);
         String teamName = teamName(p, g);
         String old = teams.put(p.getUniqueId(), teamName);
         String prefix = tags ? render(p, g != null ? g.getString("tagprefix", "{prefix}") : "{prefix}") : "";
@@ -209,40 +204,6 @@ public final class TabManager implements Listener {
         }
     }
 
-    /**
-     * Player#setCustomName does not render above real player entities.
-     * Use a tiny invisible marker ArmorStand for nicked players instead.
-     * This leaves normal LuckPerms nametags completely untouched.
-     */
-    private void updateNickTag(Player p, boolean nicked) {
-        ArmorStand tag = nickTags.get(p.getUniqueId());
-        if (!nicked) {
-            if (tag != null) {
-                tag.remove();
-                nickTags.remove(p.getUniqueId());
-            }
-            return;
-        }
-        if (tag != null && tag.getWorld() != p.getWorld()) {
-            tag.remove();
-            tag = null;
-            nickTags.remove(p.getUniqueId());
-        }
-        if (tag == null || tag.isDead()) {
-            Entity e = p.getWorld().spawnEntity(p.getLocation(), EntityType.ARMOR_STAND);
-            tag = (ArmorStand) e;
-            tag.setVisible(false);
-            tag.setGravity(false);
-            tag.setSmall(true);
-            tag.setMarker(true);
-            tag.setCustomNameVisible(true);
-            nickTags.put(p.getUniqueId(), tag);
-        }
-        tag.setCustomName(plugin.getNickService().shownPrefix(p)
-                + plugin.getNickService().shownName(p)
-                + plugin.getNickService().shownSuffix(p));
-        tag.teleport(p.getLocation().add(0, 2.35, 0));
-    }
 
     private static void setPrefix(Team team, String value) {
         if (value.equals(team.getPrefix())) return;
@@ -316,8 +277,6 @@ public final class TabManager implements Listener {
     // ---------------------------------------------------------------- lifecycle
 
     private void remove(Player p) {
-        ArmorStand tag = nickTags.remove(p.getUniqueId());
-        if (tag != null) tag.remove();
         String team = teams.remove(p.getUniqueId());
         lastHeaderFooter.remove(p.getUniqueId());
         ids.remove(p.getUniqueId());
@@ -342,8 +301,6 @@ public final class TabManager implements Listener {
             if (b != null) b.unregister();
         }
         teams.clear();
-        for (ArmorStand tag : nickTags.values()) if (tag != null) tag.remove();
-        nickTags.clear();
         for (Player p : Bukkit.getOnlinePlayers()) {
             p.setPlayerListName(null);
             if (lastHeaderFooter.containsKey(p.getUniqueId())) Reflect.setHeaderFooter(p, "", "");

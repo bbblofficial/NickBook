@@ -31,15 +31,15 @@ nicked-group: default
 formats:
   default:
     priority: 0
-    format: "{channel}{prefix}{name}{suffix}&7: {message}"
+    format: "{channel}{prefix}{name}&7: {message}"
     message-color: "&7"
   vip:
     priority: 10
-    format: "{channel}{prefix}{name}{suffix}&f: {message}"
+    format: "{channel}{prefix}{name}&f: {message}"
     message-color: "&f"
   mvp:
     priority: 20
-    format: "{channel}{prefix}{name}{suffix}&f: {message}"
+    format: "{channel}{prefix}{name}&f: {message}"
     message-color: "&f"
 
 # Hover tooltip + click action on the player name (sent as JSON chat).
